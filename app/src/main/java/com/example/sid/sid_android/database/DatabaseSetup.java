@@ -37,6 +37,7 @@ public class DatabaseSetup extends SQLiteOpenHelper {
     }
 
     public void createDatabase(SQLiteDatabase db){
+        //these tables need to be updated. The fields are wrong.
         db.execSQL("CREATE TABLE IF NOT EXISTS"+ TRANSLATOR_TABLE+"(Username VARCHAR,Password VARCHAR)");
         db.execSQL("CREATE TABLE IF NOT EXISTS"+ COMPANY_TABLE+"(Username VARCHAR,Password VARCHAR)");
     }
