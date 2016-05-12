@@ -1,0 +1,9 @@
+#fixs
+
+DatabaseHandler.java > getAllAds()  : O cursor estava a chamar colunas do 1 ao 10 em vez de 0-9 (crashava a app pois nao existe 10)
+DatabaseHandler.java > getCompany()  : O cursor estava a chamar colunas do 1 ao 4 em vez de 0-3 (crashava a app pois nao existe 4)
+DatabaseHandler.java > getAllCompanies()  : O cursor estava a chamar colunas do 1 ao 4 em vez de 0-3 (crashava a app pois nao existe 4)
+
+#bugs
+
+InteractiveArrayAdapter.java > getView() : as rows não estão a ser recicladas correctamente, quando se aceita um ad e fazemos scroll ele muda de posicao.
