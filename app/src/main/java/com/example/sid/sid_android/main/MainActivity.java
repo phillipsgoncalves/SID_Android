@@ -59,12 +59,43 @@ public class MainActivity extends Activity implements View.OnClickListener {
         button2 = (Button) findViewById(R.id.btn_Old);
         button.setOnClickListener(this);
         button2.setOnClickListener(this);
+
+        /** PARA TESTAR SEM A PARTE DE PHP **/
+        insertHardcodedDataForTestingPurposes();
+
+
         if (handler.getAllAds().size() > 0) {
             List<Advertisement> ads = handler.getAllAds();
             ArrayAdapter<Advertisement> adapter = new InteractiveArrayAdapter((Activity) getC(), ads, handler);
             listView.setAdapter(adapter);
         }
 
+
+    }
+
+    private void insertHardcodedDataForTestingPurposes() {
+
+        /** ANUNCIOS **/
+        /** int numero_anuncio, String lingua_origem, String lingua_destino, int numero_palavras,
+         * double valor, String data_inicio, int numero_dias, String software, String estado, String email
+         */
+
+        Advertisement ad1 = new Advertisement(1,"pt", "eng",100,
+        10.5, "10-07-2016", 10, "sw1", "A", "ads@mercedes.com");
+        Advertisement ad2 = new Advertisement(2,"pt", "eng",100,
+                10.5, "10-07-2016", 10, "sw1", "A", "ads@mercedes.com");
+        Advertisement ad3 = new Advertisement(3,"pt", "eng",100,
+                10.5, "10-07-2016", 10, "sw1", "A", "ads@mercedes.com");
+        Advertisement ad4 = new Advertisement(4,"pt", "eng",100,
+                10.5, "10-07-2016", 10, "sw1", "A", "ads@mercedes.com");
+        handler.insertAd(ad1);
+        handler.insertAd(ad2);
+        handler.insertAd(ad3);
+        handler.insertAd(ad4);
+
+        /** EMPRESAS **/
+        Company cp1 = new Company("Mercedes", "ads@mercedes.com", "password???", "Somos da mercedes ganhamos mellons!");
+        handler.insertCompany(cp1);
 
     }
 
@@ -139,7 +170,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
             public void onClick(DialogInterface dialog, int which) {
                 mailToPass = emailBox.getText().toString();
                 passToPass = passwordBox.getText().toString();
-                new ResetDB().execute();
+//                new ResetDB().execute();
             }
         });
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {

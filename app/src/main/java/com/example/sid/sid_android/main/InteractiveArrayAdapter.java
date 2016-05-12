@@ -63,6 +63,11 @@ public class InteractiveArrayAdapter extends ArrayAdapter<Advertisement> {
                 public void onClick(View v) {
                     AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
                     alertDialogBuilder.setTitle("Informação Empresa");
+
+                    System.out.println(list.get(position).toString());
+
+
+
                     Company c = handler.getCompany(list.get(position).getEmail());
                     alertDialogBuilder.setMessage(c.toString());
                     alertDialogBuilder.setCancelable(false).setPositiveButton("OK",

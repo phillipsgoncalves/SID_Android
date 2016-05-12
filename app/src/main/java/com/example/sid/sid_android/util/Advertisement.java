@@ -13,8 +13,7 @@ public class Advertisement {
     private String estado;
     private String email;
 
-    public Advertisement(int numero_anuncio, String lingua_origem, String lingua_destino, int numero_palavras,
-                         double valor, String data_inicio, int numero_dias, String software, String estado, String email) {
+    public Advertisement(int numero_anuncio, String lingua_origem, String lingua_destino, int numero_palavras, double valor, String data_inicio, int numero_dias, String software, String estado, String email) {
         this.numero_anuncio = numero_anuncio;
         this.lingua_origem = lingua_origem;
         this.lingua_destino = lingua_destino;

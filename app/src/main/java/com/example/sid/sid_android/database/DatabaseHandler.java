@@ -3,6 +3,7 @@ package com.example.sid.sid_android.database;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.example.sid.sid_android.util.Advertisement;
@@ -57,8 +58,8 @@ public class DatabaseHandler {
         Cursor cursor = db.query(DatabaseSetup.COMPANY_TABLE, null, null, null, null, null, null);
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
-            Company company = new Company(cursor.getString(1), cursor.getString(2), cursor.getString(3),
-                    cursor.getString(4));
+            Company company = new Company(cursor.getString(0), cursor.getString(1), cursor.getString(2),
+                    cursor.getString(3));
             all.add(company);
             cursor.moveToNext();
         }
@@ -67,10 +68,17 @@ public class DatabaseHandler {
     }
 
     public Company getCompany(String mail) {
-        Cursor cursor = db.query(DatabaseSetup.COMPANY_TABLE, null, "Company.email like '" + mail + "'", null, null, null,
+        Cursor cursor = db.query(DatabaseSetup.COMPANY_TABLE, null, "Company.email='" + mail + "'", null, null, null,
                 null);
         cursor.moveToFirst();
-        Company c = new Company(cursor.getString(1), cursor.getString(2), cursor.getString(3), cursor.getString(4));
+
+        int nome_index = cursor.getColumnIndex(Schema.Company.COLUMN_NOME_EMPRESA);
+        int email_index = cursor.getColumnIndex(Schema.Company.COLUMN_EMAIL);
+        int password_index = cursor.getColumnIndex(Schema.Company.COLUMN_PASSWORD);
+        int apresentacao_index = cursor.getColumnIndex(Schema.Company.COLUMN_APRESENTACAO);
+
+        System.out.println("cursor company : " + DatabaseUtils.dumpCursorToString(cursor));
+        Company c = new Company(cursor.getString(nome_index), cursor.getString(email_index), cursor.getString(password_index), cursor.getString(apresentacao_index));
         cursor.close();
         return c;
     }
@@ -79,10 +87,23 @@ public class DatabaseHandler {
         List<Advertisement> all = new ArrayList<Advertisement>();
         Cursor cursor = db.query(DatabaseSetup.TRANSLATOR_TABLE, null, null, null, null, null, null);
         cursor.moveToFirst();
+
+        int numero_anuncio_index = cursor.getColumnIndex(Schema.Translator.COLUMN_NUMERO_ANUNCIO);
+        int lingua_origem_index = cursor.getColumnIndex(Schema.Translator.COLUMN_LINGUA_ORIGEM);
+        int lingua_destino_index = cursor.getColumnIndex(Schema.Translator.COLUMN_LINGUA_DESTINO);
+        int numero_palavras_index = cursor.getColumnIndex(Schema.Translator.COLUMN_NUMERO_PALAVRAS);
+        int valor_index = cursor.getColumnIndex(Schema.Translator.COLUMN_VALOR);
+        int data_inicio_index = cursor.getColumnIndex(Schema.Translator.COLUMN_DATA_INICIO);
+        int numero_dias_index = cursor.getColumnIndex(Schema.Translator.COLUMN_NUMERO_DIAS);
+        int software_index = cursor.getColumnIndex(Schema.Translator.COLUMN_SOFTWARE);
+        int estado_index = cursor.getColumnIndex(Schema.Translator.COLUMN_ESTADO);
+        int email_index = cursor.getColumnIndex(Schema.Translator.COLUMN_EMAIL);
+
         while (!cursor.isAfterLast()) {
-            Advertisement ad = new Advertisement(cursor.getInt(1), cursor.getString(2), cursor.getString(3),
-                    cursor.getInt(4), cursor.getDouble(5), cursor.getString(6), cursor.getInt(7), cursor.getString(8),
-                    cursor.getString(9), cursor.getString(10));
+            // numero_anuncio, lingua_origem, lingua_destino, numero_palavras,valor, data_inicio_trabalho, numero_dias, designacao_software, estado, email
+            Advertisement ad = new Advertisement(cursor.getInt(numero_anuncio_index), cursor.getString(lingua_origem_index), cursor.getString(lingua_destino_index),
+                    cursor.getInt(numero_palavras_index), cursor.getDouble(valor_index), cursor.getString(data_inicio_index), cursor.getInt(numero_dias_index), cursor.getString(software_index),
+                    cursor.getString(estado_index), cursor.getString(email_index));
             all.add(ad);
             cursor.moveToNext();
         }
