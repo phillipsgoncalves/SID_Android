@@ -4,16 +4,15 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
+import java.lang.reflect.Field;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.Locale;
 
 import com.example.sid.sid_android.database.annotations.ColumnDefinition;
 import com.example.sid.sid_android.database.annotations.OnConflict;
 import com.example.sid.sid_android.database.annotations.SQLType;
 import com.example.sid.sid_android.database.annotations.TableDefinition;
-
-import java.lang.reflect.Field;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.Locale;
 
 public class DatabaseSetup extends SQLiteOpenHelper {
 
@@ -81,6 +80,7 @@ public class DatabaseSetup extends SQLiteOpenHelper {
             Iterator<Field> it = Arrays.asList(table_columns).iterator();
 
             while (it.hasNext()) {
+                Log.d(this.getClass().getName(), " aqui " + sql_statement);
                 column = it.next();
                 column_definition = column.getAnnotation(ColumnDefinition.class);
                 column.setAccessible(true);

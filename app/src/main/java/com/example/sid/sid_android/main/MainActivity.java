@@ -11,6 +11,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -45,9 +46,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private static final String IP = UserLogin.getInstance().getIp();
     private static final String PORT = UserLogin.getInstance().getPort();
-
-    private static final String READ_ADS = "http://" + IP + ":" + PORT + "/getAds.php";
-    private static final String READ_COMP = "http://" + IP + ":" + PORT + "/getComps.php";
+    private static final String READ_ADS = "http://" + IP +  ":" + PORT + "/getAds.php";
+    private static final String READ_COMP = "http://" + IP +":" + PORT + "/getComps.php";
     private static final String SYNCHRONIZE = "http://" + IP + ":" + PORT + "/synchronize.php";
 
     @Override
@@ -63,7 +63,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         button2.setOnClickListener(this);
 
         /** PARA TESTAR SEM A PARTE DE PHP **/
-        insertHardcodedDataForTestingPurposes();
+//        insertHardcodedDataForTestingPurposes();
 
 
         if (handler.getAllAds().size() > 0) {
@@ -106,23 +106,27 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void addToList(JSONParser jParser, HashMap<String, String> params, String emails, String passs) {
         try {
 
-            params.put("email", emails);
-            params.put("pass", passs);
+            params.put("user", "2");
+//            params.put("pass", passs);
+            params.put("format", "json");
             JSONArray json = jParser.getJSONFromUrl(READ_ADS, params);
+
             List<String> list = new LinkedList<String>();
             handler.clearAds();
             for (int i = 0; i < json.length(); i++) {
-                JSONObject c = json.getJSONObject(i);
-                int numero_anuncio = c.getInt("Numero_Anuncio");
+                JSONObject a = json.getJSONObject(i);
+                JSONObject c = a.getJSONObject("post");
+                Log.d(this.getClass().getName(), "jsonObj : " + c.toString());
+                int numero_anuncio = c.getInt("numeroAnuncio");
                 String lingua_origem = c.getString("Lingua_Origem");
-                String designacao_software = c.getString("Designacao_Software");
+                String designacao_software = c.getString("designacaoSoftware");
                 String lingua_destino = c.getString("Lingua_Destino");
-                String data_inicio_trabalho = c.getString("Data_Inicio_Trabalho");
-                int numero_dias = c.getInt("Numero_Dias");
-                int numero_palavras = c.getInt("Numero_Palavras");
-                double valor = c.getDouble("Valor");
-                String estado = c.getString("Estado");
-                String email = c.getString("Email");
+                String data_inicio_trabalho = c.getString("dataInicioTrabalho");
+                int numero_dias = c.getInt("numeroDias");
+                int numero_palavras = c.getInt("Numero_de_palavras");
+                double valor = c.getDouble("valor");
+                String estado = c.getString("estado");
+                String email = c.getString("email");
                 list.add(email);
                 handler.insertAd(new Advertisement(numero_anuncio, lingua_origem, lingua_destino, numero_palavras,
                         valor, data_inicio_trabalho, numero_dias, designacao_software, estado, email));
