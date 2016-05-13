@@ -7,27 +7,47 @@
         android:id="@+id/btnLL"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true" >
+        android:layout_alignParentBottom="true"
+        android:weightSum="4">
 
         <Button
             android:id="@+id/btn_New"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="Reset Database" />
+            android:background="@drawable/mybutton"
+            android:text="Reset Database"
+            android:layout_margin="2dp"
+            android:textColor="#ffffff" />
+        <Button
+            android:id="@+id/btn_MyAds"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/mybutton"
+            android:text="My Ads"
+            android:layout_margin="2dp"
+            android:textColor="#ffffff" />
 
         <Button
             android:id="@+id/btn_Old"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Synchronize" />
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:background="@drawable/mybutton"
+            android:text="Synchronize"
+            android:layout_margin="2dp"
+            android:textColor="#ffffff" />
     </LinearLayout>
 
     <ListView
         android:id="@+id/adList"
+        style="@style/Divider"
+        android:dividerHeight="1sp"
+        android:scrollbars="none"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_above="@id/btnLL" />
+        android:layout_above="@id/btnLL"
+        android:divider="#a1887f" />
 
 </RelativeLayout>

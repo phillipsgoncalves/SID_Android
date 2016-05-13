@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">SID_Android</string>
+    <string name="app_name">Bolsa de Anuncios</string>
     <string name="title_activity_login">Sign in</string>
 
     <!-- Strings related to login -->

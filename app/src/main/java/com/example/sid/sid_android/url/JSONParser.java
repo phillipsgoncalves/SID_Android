@@ -40,12 +40,13 @@ public class JSONParser {
             HttpURLConnection conn = (HttpURLConnection) urlObj.openConnection();
             conn.setDoOutput(true);
             conn.setRequestMethod("POST");
-            conn.connect();
+            //conn.connect();   // isto pode resolver - tenho de testar, o openConnection supostamente ja trata isto.
             String paramsString = sb_params.toString();
             DataOutputStream wr = new DataOutputStream(conn.getOutputStream());
             wr.writeBytes(paramsString);
             wr.flush();
             wr.close();
+
             InputStream in = new BufferedInputStream(conn.getInputStream());
             BufferedReader reader = new BufferedReader(new InputStreamReader(in));
             StringBuilder result = new StringBuilder();

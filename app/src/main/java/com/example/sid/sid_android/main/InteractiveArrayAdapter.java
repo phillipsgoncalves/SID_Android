@@ -33,30 +33,42 @@ public class InteractiveArrayAdapter extends ArrayAdapter<Advertisement> {
     }
 
     static class ViewHolder {
-        protected TextView text;
         protected ImageView image;
         protected Button button;
+        protected ImageView icon;
+        protected TextView ling_origem;
+        protected TextView ling_destino;
+        protected TextView num_palavras;
+        protected TextView valor;
+        protected TextView data;
+        protected TextView dias;
+        protected TextView software;
     }
 
     @SuppressLint("InflateParams")
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
-        View view = null;
+        ViewHolder viewHolder;
+
+        /** bug parece resolvido, escrever no relatorio **/
+
         if (convertView == null) {
             LayoutInflater inflator = context.getLayoutInflater();
-            view = inflator.inflate(R.layout.rowbuttonlayout, null);
-            final ViewHolder viewHolder = new ViewHolder();
-            viewHolder.text = (TextView) view.findViewById(R.id.label);
-            viewHolder.image = (ImageView) view.findViewById(R.id.image);
-            viewHolder.button = (Button) view.findViewById(R.id.second);
+            convertView = inflator.inflate(R.layout.rowbuttonlayout, null);
+            viewHolder = new ViewHolder();
 
-            if (list.get(position).getEstado().equals("Y")) {
-                viewHolder.image.setImageResource(R.drawable.yes);
-            } else if (list.get(position).getEstado().equals("N")) {
-                viewHolder.image.setImageResource(R.drawable.no);
-            } else {
-                viewHolder.image.setImageResource(R.drawable.unknown);
-            }
+            viewHolder.ling_origem = (TextView) convertView.findViewById(R.id.ling_origem);
+            viewHolder.ling_destino = (TextView) convertView.findViewById(R.id.ling_destino);
+            viewHolder.num_palavras = (TextView) convertView.findViewById(R.id.num_palavras);
+            viewHolder.valor = (TextView) convertView.findViewById(R.id.valor);
+            viewHolder.data = (TextView) convertView.findViewById(R.id.data);
+            viewHolder.dias = (TextView) convertView.findViewById(R.id.dias);
+            viewHolder.software = (TextView) convertView.findViewById(R.id.software);
+            viewHolder.icon = (ImageView)convertView.findViewById(R.id.imageView);
+
+            viewHolder.image = (ImageView) convertView.findViewById(R.id.image);
+            viewHolder.button = (Button) convertView.findViewById(R.id.second);
+
             viewHolder.button.setOnClickListener(new View.OnClickListener() {
 
                 @Override
@@ -83,7 +95,8 @@ public class InteractiveArrayAdapter extends ArrayAdapter<Advertisement> {
                 }
             });
 
-            viewHolder.image.setOnClickListener(new View.OnClickListener() {
+            final ViewHolder finalViewHolder = viewHolder;
+            finalViewHolder.image.setOnClickListener(new View.OnClickListener() {
 
                 @Override
                 public void onClick(View v) {
@@ -94,7 +107,7 @@ public class InteractiveArrayAdapter extends ArrayAdapter<Advertisement> {
                             new DialogInterface.OnClickListener() {
 
                                 public void onClick(DialogInterface dialog, int id) {
-                                    viewHolder.image.setImageResource(R.drawable.yes);
+                                    finalViewHolder.image.setImageResource(R.drawable.yes);
                                     list.get(position).setEstado("Y");
                                     handler.updateAd(list.get(position).getNumero_anuncio(), list.get(position));
                                 }
@@ -103,7 +116,7 @@ public class InteractiveArrayAdapter extends ArrayAdapter<Advertisement> {
                     alertDialogBuilder.setNegativeButton("Recusar", new DialogInterface.OnClickListener() {
 
                         public void onClick(DialogInterface dialog, int id) {
-                            viewHolder.image.setImageResource(R.drawable.no);
+                            finalViewHolder.image.setImageResource(R.drawable.no);
                             list.get(position).setEstado("N");
                             handler.updateAd(list.get(position).getNumero_anuncio(), list.get(position));
                         }
@@ -112,7 +125,7 @@ public class InteractiveArrayAdapter extends ArrayAdapter<Advertisement> {
                     alertDialogBuilder.setNeutralButton("Pendente", new DialogInterface.OnClickListener() {
 
                         public void onClick(DialogInterface dialog, int id) {
-                            viewHolder.image.setImageResource(R.drawable.unknown);
+                            finalViewHolder.image.setImageResource(R.drawable.unknown);
                             list.get(position).setEstado("I");
                             handler.updateAd(list.get(position).getNumero_anuncio(), list.get(position));
                         }
@@ -123,15 +136,38 @@ public class InteractiveArrayAdapter extends ArrayAdapter<Advertisement> {
                 }
 
             });
-            view.setTag(viewHolder);
+//            view.setTag(viewHolder);
             viewHolder.image.setTag(list.get(position));
+            if (convertView != null)
+            {
+                convertView.setTag(viewHolder);
+            }
         } else {
-            view = convertView;
-            ((ViewHolder) view.getTag()).image.setTag(list.get(position));
+            viewHolder = (ViewHolder) convertView.getTag();
+//            view = convertView;
+//            ((ViewHolder) view.getTag()).image.setTag(list.get(position));
         }
-        ViewHolder holder = (ViewHolder) view.getTag();
-        holder.text.setText(list.get(position).toString());
-        return view;
+
+        if (list.get(position).getEstado().equals("Y")) {
+            viewHolder.image.setImageResource(R.drawable.yes);
+        } else if (list.get(position).getEstado().equals("N")) {
+            viewHolder.image.setImageResource(R.drawable.no);
+        } else {
+            viewHolder.image.setImageResource(R.drawable.unknown);
+        }
+
+//        ViewHolder holder = (ViewHolder) view.getTag();
+        viewHolder.ling_origem.setText("From: " + list.get(position).getLingua_origem());
+        viewHolder.ling_destino.setText("To: " + list.get(position).getLingua_destino());
+        viewHolder.num_palavras.setText("Words #: " + String.valueOf(list.get(position).getNumero_palavras()));
+        viewHolder.valor.setText("Earn: " + String.valueOf(list.get(position).getValor()) + " €");
+        viewHolder.data.setText("Start in: " + list.get(position).getData_inicio());
+        viewHolder.dias.setText("Days #: " + String.valueOf(list.get(position).getNumero_dias()));
+        viewHolder.software.setText("Software: " + list.get(position).getSoftware());
+        viewHolder.icon.setBackgroundColor(list.get(position).getLogoColor());
+        viewHolder.icon.getBackground().setAlpha(50); // queremos transparencia no logo para nao ficar com cores muito berrantes
+
+        return convertView;
     }
 
 }

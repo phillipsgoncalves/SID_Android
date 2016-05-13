@@ -1,5 +1,9 @@
 package com.example.sid.sid_android.util;
 
+import android.graphics.Color;
+
+import java.util.Random;
+
 public class Advertisement {
 
     private int numero_anuncio;
@@ -12,6 +16,7 @@ public class Advertisement {
     private String software;
     private String estado;
     private String email;
+    private int logoColor;
 
     public Advertisement(int numero_anuncio, String lingua_origem, String lingua_destino, int numero_palavras, double valor, String data_inicio, int numero_dias, String software, String estado, String email) {
         this.numero_anuncio = numero_anuncio;
@@ -24,6 +29,9 @@ public class Advertisement {
         this.software = software;
         this.estado = estado;
         this.email = email;
+
+        Random rnd = new Random();
+        logoColor = Color.argb(255, rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256));
     }
 
     public int getNumero_anuncio() {
@@ -113,5 +121,12 @@ public class Advertisement {
                 + getData_inicio() + ", Num Dias: " + getNumero_dias() + ", Software: " + getSoftware();
     }
 
+    public int getLogoColor() {
+        return logoColor;
+    }
+
+    public void setLogoColor(int logoColor) {
+        this.logoColor = logoColor;
+    }
 }
 
