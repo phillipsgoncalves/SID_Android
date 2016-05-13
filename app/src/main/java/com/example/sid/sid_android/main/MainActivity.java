@@ -69,8 +69,6 @@ public class MainActivity extends Activity implements View.OnClickListener {
             ArrayAdapter<Advertisement> adapter = new InteractiveArrayAdapter((Activity) getC(), ads, handler);
             listView.setAdapter(adapter);
         }
-
-
     }
 
     private void insertHardcodedDataForTestingPurposes() {
@@ -170,7 +168,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
             public void onClick(DialogInterface dialog, int which) {
                 mailToPass = emailBox.getText().toString();
                 passToPass = passwordBox.getText().toString();
-//                new ResetDB().execute();
+                new ResetDB().execute();
             }
         });
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
