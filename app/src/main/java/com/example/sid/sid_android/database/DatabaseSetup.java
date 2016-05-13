@@ -20,6 +20,7 @@ public class DatabaseSetup extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "translator.db";
     public static final String TRANSLATOR_TABLE = "Translator";
     public static final String COMPANY_TABLE = "Company";
+    public static final String MYADS_TABLE = "MyAds";
     private static DatabaseSetup dbSetupInstance;
     private boolean primaryKeyDefined;
 
@@ -42,6 +43,7 @@ public class DatabaseSetup extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS " + TRANSLATOR_TABLE);
         db.execSQL("DROP TABLE IF EXISTS " + COMPANY_TABLE);
+        db.execSQL("DROP TABLE IF EXISTS " + MYADS_TABLE);
         onCreate(db);
     }
 

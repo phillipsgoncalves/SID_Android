@@ -5,9 +5,11 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import com.example.sid.sid_android.util.Advertisement;
 import com.example.sid.sid_android.util.Company;
+import com.example.sid.sid_android.util.Translator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,6 +52,14 @@ public class DatabaseHandler {
         cv.put("software", ad.getSoftware());
         cv.put("estado", ad.getEstado() + "");
         cv.put("email", ad.getEmail());
+        return cv;
+    }
+
+    private ContentValues addTranslatorValues(Translator translator) {
+        ContentValues cv = new ContentValues();
+        cv.put("numero_anuncio", translator.getNumero_anuncio());
+        cv.put("email", translator.getEmail());
+        cv.put("relacao", translator.getRelacao());
         return cv;
     }
 
@@ -111,12 +121,74 @@ public class DatabaseHandler {
         return all;
     }
 
+    public List<Advertisement> getMyAds(){
+        List<Advertisement> myAds = new ArrayList<Advertisement>();
+
+        String whereClauseAnuncios="estado='Y'";
+       // String []whereClauseAnunciosArgs={"'y'"};
+        String whereClauseMyAds="email='translator@iscte.pt'";
+        //String []whereClauseMyAdsArgs={"'translator@iscte.pt'"};
+        Cursor c = db.query(DatabaseSetup.TRANSLATOR_TABLE, null, whereClauseAnuncios,null, null, null, null);
+        c.moveToFirst();
+        System.out.println("Teste de sysout-Samaris- "+ c.moveToFirst());
+
+        int numero_anuncio_index = c.getColumnIndex(Schema.Translator.COLUMN_NUMERO_ANUNCIO);
+        int lingua_origem_index = c.getColumnIndex(Schema.Translator.COLUMN_LINGUA_ORIGEM);
+        int lingua_destino_index = c.getColumnIndex(Schema.Translator.COLUMN_LINGUA_DESTINO);
+        int numero_palavras_index = c.getColumnIndex(Schema.Translator.COLUMN_NUMERO_PALAVRAS);
+        int valor_index = c.getColumnIndex(Schema.Translator.COLUMN_VALOR);
+        int data_inicio_index = c.getColumnIndex(Schema.Translator.COLUMN_DATA_INICIO);
+        int numero_dias_index = c.getColumnIndex(Schema.Translator.COLUMN_NUMERO_DIAS);
+        int software_index = c.getColumnIndex(Schema.Translator.COLUMN_SOFTWARE);
+        int estado_index = c.getColumnIndex(Schema.Translator.COLUMN_ESTADO);
+        int email_index = c.getColumnIndex(Schema.Translator.COLUMN_EMAIL);
+
+
+        int adNumber;
+        /*criar outro cursor para a tabela de tradutor e ver se para este numero de anuncio, ta la o meu mail*/
+        while(!c.isAfterLast()){
+            Cursor c2=db.query(DatabaseSetup.MYADS_TABLE, null, whereClauseMyAds, null, null, null, null );
+            c2.moveToFirst();
+
+            adNumber=c.getInt(numero_anuncio_index);
+
+            while(!c2.isAfterLast()){
+                //ver se na tabela myads (dos tradutores) existe uma entrada com aquele numero de anuncio
+                int myAd_Numero_Anuncio_index=c2.getColumnIndex(Schema.MyAds.COLUMN_NUMERO_ANUNCIO);
+                int myAdNumber= c2.getInt(myAd_Numero_Anuncio_index);
+
+                if(myAdNumber==adNumber){
+                    Advertisement myAd=new Advertisement(myAdNumber, c.getString(lingua_origem_index), c.getString(lingua_destino_index),
+                            c.getInt(numero_palavras_index), c.getDouble(valor_index), c.getString(data_inicio_index), c.getInt(numero_dias_index), c.getString(software_index),
+                            c.getString(estado_index), c.getString(email_index));
+
+                    Log.d(this.getClass().getName(), ""+myAdNumber+""+adNumber);
+
+                    myAds.add(myAd);
+                }
+                c2.moveToNext();
+
+            }
+            c2.close();
+            c.moveToNext();
+
+        }
+        c.close();
+        System.out.println("O valor Jonas Pistolenz is "+myAds.size());
+        return myAds;
+    }
+
     public void insertCompany(Company company) {
         db.insert(DatabaseSetup.COMPANY_TABLE, "nome_empresa", addCompanyValues(company));
     }
 
     public void insertAd(Advertisement ad) {
         db.insert(DatabaseSetup.TRANSLATOR_TABLE, "numero_anuncio", addAdvertisingValues(ad));
+    }
+
+    /*pus o numero_anuncio pq esse e a maior garantia que vai ser unico*/
+    public void insertTranslator(Translator translator){
+        db.insert(DatabaseSetup.MYADS_TABLE, "numero_anuncio" , addTranslatorValues(translator));
     }
 
     public void deleteCompany(String email) {
@@ -127,12 +199,21 @@ public class DatabaseHandler {
         db.delete(DatabaseSetup.TRANSLATOR_TABLE, "numero_anuncio = " + numero_anuncio, null);
     }
 
+    public void deleteMyAd(int numero_anuncio) {
+        db.delete(DatabaseSetup.MYADS_TABLE, "numero_anuncio = " + numero_anuncio, null);
+    }
+
     public void updateCompany(String email, Company new_company) {
         db.update(DatabaseSetup.COMPANY_TABLE, addCompanyValues(new_company), "email = '" + email + "'", null);
     }
 
     public void updateAd(int numero_anuncio, Advertisement new_ad) {
         db.update(DatabaseSetup.TRANSLATOR_TABLE, addAdvertisingValues(new_ad), "numero_anuncio = " + numero_anuncio,
+                null);
+    }
+
+    public void updateMyAd(int numero_anuncio, Advertisement new_ad) {
+        db.update(DatabaseSetup.MYADS_TABLE, addAdvertisingValues(new_ad), "numero_anuncio = " + numero_anuncio,
                 null);
     }
 

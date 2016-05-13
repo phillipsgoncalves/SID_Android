@@ -68,4 +68,19 @@ public class Schema {
             return "translator";
         }
     }
+
+    public static class MyAds{
+        @ColumnDefinition(type=SQLType.INTEGER)
+        public static final String COLUMN_NUMERO_ANUNCIO = "numero_anuncio";
+
+        @ColumnDefinition(type = SQLType.TEXT)
+        public static final String COLUMN_EMAIL = "email";
+
+        @ColumnDefinition(type=SQLType.TEXT)
+        public static final String COLUMN_RELACAO= "relacao";
+
+        public static String getName() {
+            return "MyAds";
+        }
+    }
 }

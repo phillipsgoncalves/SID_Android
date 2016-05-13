@@ -25,6 +25,7 @@ import com.example.sid.sid_android.database.DatabaseHandler;
 import com.example.sid.sid_android.url.JSONParser;
 import com.example.sid.sid_android.util.Advertisement;
 import com.example.sid.sid_android.util.Company;
+import com.example.sid.sid_android.util.Translator;
 import com.example.sid.sid_android.util.UserLogin;
 
 import org.json.JSONArray;
@@ -40,7 +41,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private DatabaseHandler handler;
     private ProgressDialog pDialog;
     private ListView listView;
-    private Button button, button2;
+    private Button button, button2, myAdsButton;
     private String mailToPass = "";
     private String passToPass = "";
 
@@ -59,18 +60,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         listView = (ListView) findViewById(R.id.adList);
         button = (Button) findViewById(R.id.btn_New);
         button2 = (Button) findViewById(R.id.btn_Old);
+        myAdsButton=(Button) findViewById(R.id.btn_MyAds);
         button.setOnClickListener(this);
         button2.setOnClickListener(this);
 
-        /** PARA TESTAR SEM A PARTE DE PHP **/
-//        insertHardcodedDataForTestingPurposes();
-
+        myAdsButton.setOnClickListener(this);
 
         if (handler.getAllAds().size() > 0) {
             List<Advertisement> ads = handler.getAllAds();
             ArrayAdapter<Advertisement> adapter = new InteractiveArrayAdapter((Activity) getC(), ads, handler);
             listView.setAdapter(adapter);
         }
+
+        /** PARA TESTAR SEM A PARTE DE PHP **/
+       //insertHardcodedDataForTestingPurposes();
+
     }
 
     private void insertHardcodedDataForTestingPurposes() {
@@ -81,9 +85,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
          */
 
         Advertisement ad1 = new Advertisement(1,"pt", "eng",100,
-        10.5, "10-07-2016", 10, "sw1", "A", "ads@mercedes.com");
+        10.5, "10-07-2099", 10, "sw1", "Y", "ads@mercedes.com");
         Advertisement ad2 = new Advertisement(2,"pt", "eng",100,
-                10.5, "10-07-2016", 10, "sw1", "A", "ads@mercedes.com");
+                10.5, "10-07-2087", 10, "sw1", "Y", "ads@mercedes.com");
         Advertisement ad3 = new Advertisement(3,"pt", "eng",100,
                 10.5, "10-07-2016", 10, "sw1", "A", "ads@mercedes.com");
         Advertisement ad4 = new Advertisement(4,"pt", "eng",100,
@@ -96,6 +100,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         /** EMPRESAS **/
         Company cp1 = new Company("Mercedes", "ads@mercedes.com", "password???", "Somos da mercedes ganhamos mellons!");
         handler.insertCompany(cp1);
+
+        Translator t1= new Translator(1,"translator@iscte.pt", "R");
+        Translator t2= new Translator(2,"translator@iscte.pt", "R");
+        handler.insertTranslator(t1);
+        handler.insertTranslator(t2);
 
     }
 
@@ -212,6 +221,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 getEmailToPass();
             } else if (v.getId() == R.id.btn_Old) {
                 new SynchronizeDB().execute();
+            } else if(v.getId() == R.id.btn_MyAds){
+                new MyAdsDB(this).execute();
             }
         } else {
             Toast.makeText(getC(), "Check your Internet Connection", Toast.LENGTH_LONG).show();
@@ -301,6 +312,55 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         }
 
+    }
+
+    class MyAdsDB extends AsyncTask<String, String, String> {
+
+
+        Activity act;
+        HashMap<String,String> params1;
+        JSONParser jParser;
+
+
+        public MyAdsDB(Activity activity) {
+            this.act=activity;
+        }
+
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            pDialog = new ProgressDialog(MainActivity.this);
+            pDialog.setMessage("Getting your ads. Slimani is the best...");
+            pDialog.setIndeterminate(false);
+            pDialog.setCancelable(true);
+            pDialog.show();
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+            List<Advertisement> myads=handler.getMyAds();
+            if(myads.size()>0){
+               Log.d(this.getClass().getName(), "Estou aqui Sulemane huehue br");
+                final ArrayAdapter<Advertisement> adapter = new InteractiveArrayAdapter((Activity) getC(), myads, handler);
+                act.runOnUiThread(new Runnable(){
+                    public void run() {
+                        listView.invalidate();
+                        listView.setAdapter(adapter);
+
+                    }
+                });
+
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            pDialog.dismiss();
+            Toast.makeText(getC(), "All of your Adds were loaded", Toast.LENGTH_LONG).show();
+        }
     }
 
 }
