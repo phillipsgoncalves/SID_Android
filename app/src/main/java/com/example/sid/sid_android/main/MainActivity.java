@@ -49,6 +49,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private static final String PORT = UserLogin.getInstance().getPort();
     private static final String READ_ADS = "http://" + IP +  ":" + PORT + "/getAds.php";
     private static final String READ_COMP = "http://" + IP +":" + PORT + "/getComps.php";
+    private static final String READ_TRADS = "http://" + IP + ":" + PORT + "/getTrads.php";
     private static final String SYNCHRONIZE = "http://" + IP + ":" + PORT + "/synchronize.php";
 
     @Override
@@ -141,19 +142,35 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         valor, data_inicio_trabalho, numero_dias, designacao_software, estado, email));
             }
             handler.clearComps();
-            for (String s : list) {
-                params.clear();
-                params.put("email", s);
-                JSONArray json2 = jParser.getJSONFromUrl(READ_COMP, params);
+            JSONArray json2 = jParser.getJSONFromUrl(READ_COMP, params);
+//            for (String s : list) {
+//                params.clear();
+//                params.put("email", s);
+
                 for (int i = 0; i < json2.length(); i++) {
-                    JSONObject a = json2.getJSONObject(i);
-                    String name = a.getString("Nome_Utilizador");
-                    String email = a.getString("Email");
-                    String password = a.getString("Senha");
-                    String apresentacao = a.getString("Apresentacao");
-                    handler.insertCompany(new Company(name, email, password, apresentacao));
+                        JSONObject c = json2.getJSONObject(i);
+                        JSONObject a = c.getJSONObject("post");
+                        String name = a.getString("nomeUtilizador");
+                        String email = a.getString("email");
+                        String password = a.getString("senha");
+                        String apresentacao = a.getString("apresentacao");
+                        handler.insertCompany(new Company(name, email, password, apresentacao));
                 }
-            }
+//            }
+            handler.clearTrads();
+                JSONArray json3 = jParser.getJSONFromUrl(READ_TRADS, params);
+//            for (String s : list) {
+//                params.clear();
+//                params.put("email", s);
+                for (int i = 0; i < json3.length(); i++) {
+                    JSONObject c = json3.getJSONObject(i);
+                    JSONObject a = c.getJSONObject("post");
+                    String num_anuncio = a.getString("numeroAnuncio");
+                    String email = a.getString("email");
+                    String relacao = a.getString("Relacao");
+                    handler.insertTranslator(new Translator(Integer.parseInt(num_anuncio), email, relacao));
+                }
+//            }
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -339,27 +356,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         @Override
         protected String doInBackground(String... params) {
-            List<Advertisement> myads=handler.getMyAds();
-            if(myads.size()>0){
-               Log.d(this.getClass().getName(), "Estou aqui Sulemane huehue br");
-                final ArrayAdapter<Advertisement> adapter = new InteractiveArrayAdapter((Activity) getC(), myads, handler);
-                act.runOnUiThread(new Runnable(){
-                    public void run() {
-                        listView.invalidate();
-                        listView.setAdapter(adapter);
-
-                    }
-                });
-
-            }
-
+            params1 = new HashMap<String, String>();
+            jParser = new JSONParser();
+            params1.clear();
+            addToList(jParser, params1, mailToPass, passToPass);
             return null;
         }
 
         @Override
         protected void onPostExecute(String result) {
+            List<Advertisement> myads=handler.getMyAds();
+            final ArrayAdapter<Advertisement> adapter = new InteractiveArrayAdapter((Activity) getC(), myads, handler);
+            listView.setAdapter(adapter);
             pDialog.dismiss();
-            Toast.makeText(getC(), "All of your Adds were loaded", Toast.LENGTH_LONG).show();
+            if (myads.size() == 0) {
+                Toast.makeText(getC(), "Either no Entries or User/Pass Incorrect", Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(getC(), "Reseting Database Complete, Welcome " + mailToPass, Toast.LENGTH_LONG).show();
+            }
         }
     }
 

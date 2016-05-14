@@ -3,14 +3,6 @@ package com.example.sid.sid_android.url;
 import android.net.Uri;
 import android.util.Log;
 
-/*import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicNameValuePair;*/
-
 import org.json.JSONArray;
 import org.json.JSONObject;
 

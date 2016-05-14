@@ -16,7 +16,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="@drawable/mybutton"
-            android:text="Reset Database"
+            android:text="All Ads"
             android:layout_margin="2dp"
             android:textColor="#ffffff" />
         <Button

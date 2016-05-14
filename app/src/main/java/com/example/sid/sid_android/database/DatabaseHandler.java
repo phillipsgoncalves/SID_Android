@@ -126,7 +126,7 @@ public class DatabaseHandler {
 
         String whereClauseAnuncios="estado='Y'";
        // String []whereClauseAnunciosArgs={"'y'"};
-        String whereClauseMyAds="email='translator@iscte.pt'";
+        String whereClauseMyAds="email='joao@iscte.pt'";
         //String []whereClauseMyAdsArgs={"'translator@iscte.pt'"};
         Cursor c = db.query(DatabaseSetup.TRANSLATOR_TABLE, null, whereClauseAnuncios,null, null, null, null);
         c.moveToFirst();
@@ -225,6 +225,10 @@ public class DatabaseHandler {
     public void clearAds() {
 
         db.delete(DatabaseSetup.TRANSLATOR_TABLE, null, null);
+    }
+
+    public void clearTrads() {
+        db.delete(DatabaseSetup.MYADS_TABLE, null, null);
     }
 }
 
