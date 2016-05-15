@@ -230,5 +230,30 @@ public class DatabaseHandler {
     public void clearTrads() {
         db.delete(DatabaseSetup.MYADS_TABLE, null, null);
     }
+
+    public List<Translator> getAllTranslatorRelations() {
+        List<Translator> myTradsRelations = new ArrayList<Translator>();
+
+        //String whereClauseAnuncios="estado='Y'";
+        // String []whereClauseAnunciosArgs={"'y'"};
+        //String []whereClauseMyAdsArgs={"'translator@iscte.pt'"};
+
+        Cursor c2=db.query(DatabaseSetup.MYADS_TABLE, null, null, null, null, null, null );
+        c2.moveToFirst();
+
+            while(!c2.isAfterLast()){
+                int myAd_Numero_Anuncio_index=c2.getColumnIndex(Schema.MyAds.COLUMN_NUMERO_ANUNCIO);
+                int myRelacao_index=c2.getColumnIndex(Schema.MyAds.COLUMN_RELACAO);
+                int myEmail_index=c2.getColumnIndex(Schema.MyAds.COLUMN_EMAIL);
+                int myAdNumber= c2.getInt(myAd_Numero_Anuncio_index);
+                String relacao = c2.getString(myRelacao_index);
+                String email = c2.getString(myEmail_index);
+                    Translator translator = new Translator(myAdNumber, email, relacao);
+                    myTradsRelations.add(translator);
+                c2.moveToNext();
+            }
+            c2.close();
+        return myTradsRelations;
+    }
 }
 

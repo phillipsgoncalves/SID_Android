@@ -1,23 +1,18 @@
 package com.example.sid.sid_android.main;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -226,11 +221,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         JSONObject anuncs = new JSONObject();
         try {
             JSONArray arr = new JSONArray();
-            List<Advertisement> ads = handler.getAllAds();
+            List<Translator> ads = handler.getAllTranslatorRelations();
             for(int i = 0; i < ads.size(); i++) {
                 JSONObject obj = new JSONObject();
-                obj.put("Numero", ads.get(i).getNumero_anuncio());
-                obj.put("Estado", ads.get(i).getEstado());
+                obj.put("numeroAnuncio", ads.get(i).getNumero_anuncio());
+                obj.put("email", ads.get(i).getEmail());
+                obj.put("Relacao", ads.get(i).getRelacao());
                 arr.put(obj);
             }
             anuncs.put("Anuncios", arr);
