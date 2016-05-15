@@ -186,6 +186,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mailToPass=sharedPref.getString("email","");
         passToPass=sharedPref.getString("password","");
 
+        if(mailToPass != null && passToPass != null){
+            new ResetDB().execute();
+        }
 
         /*AlertDialog.Builder builder = new AlertDialog.Builder(getC());
         builder.setTitle("Anuncios Utilizador");
