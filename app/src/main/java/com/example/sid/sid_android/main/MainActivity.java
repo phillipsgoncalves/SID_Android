@@ -45,6 +45,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private String mailToPass = "";
     private String passToPass = "";
 
+
     private static final String IP = UserLogin.getInstance().getIp();
     private static final String PORT = UserLogin.getInstance().getPort();
     private static final String READ_ADS = "http://" + IP +  ":" + PORT + "/getAds.php";
@@ -66,6 +67,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         button2.setOnClickListener(this);
 
         myAdsButton.setOnClickListener(this);
+
+        new ResetDB().execute();
 
         if (handler.getAllAds().size() > 0) {
             List<Advertisement> ads = handler.getAllAds();

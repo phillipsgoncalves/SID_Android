@@ -3,33 +3,81 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-    <EditText
-        android:id="@+id/ip"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="134dp"
-        android:ems="10"
-        android:hint="IP (xxx.xxx.x.x)" />
-
-    <EditText
-        android:id="@+id/port"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/ip"
-        android:layout_centerHorizontal="true"
-        android:ems="10"
-        android:hint="Port (8080)" />
-
-    <Button
-        android:id="@+id/login"
+    <ViewFlipper
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/port"
-        android:layout_alignRight="@+id/port"
-        android:layout_below="@+id/port"
-        android:layout_marginTop="50dp"
-        android:text="Login" />
+        android:id="@+id/flipper">
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+
+            <EditText
+                android:id="@+id/ip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="134dp"
+                android:ems="10"
+                android:hint="IP (xxx.xxx.x.x)" />
+
+            <EditText
+                android:id="@+id/port"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/ip"
+                android:layout_centerHorizontal="true"
+                android:ems="10"
+                android:hint="Port (8080)" />
+
+            <Button
+                android:id="@+id/login"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/port"
+                android:layout_alignRight="@+id/port"
+                android:layout_below="@+id/port"
+                android:layout_marginTop="50dp"
+                android:text="Login" />
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+
+            <EditText
+                android:id="@+id/email"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="134dp"
+                android:ems="10"
+                android:hint="email" />
+
+
+            <EditText
+                android:id="@+id/password"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:ems="10"
+                android:inputType="textPassword"
+                android:hint="password" />
+
+            <Button
+                android:id="@+id/SignIn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="50dp"
+                android:layout_gravity="center"
+                android:text="Sign In" />
+
+        </LinearLayout>
+
+    </ViewFlipper>
 
 </RelativeLayout>
