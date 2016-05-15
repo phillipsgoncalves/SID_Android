@@ -27,11 +27,9 @@ import java.util.HashMap;
 import java.util.List;
 
 public class Login extends Activity implements View.OnClickListener {
-    private EditText ip, port;
+    private EditText ip, port,passToPass,mailToPass;
     private Button login, signIn;
     private ViewFlipper flipper;
-    private String mailToPass = "";
-    private String passToPass = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +49,11 @@ public class Login extends Activity implements View.OnClickListener {
 
         signIn = (Button) findViewById(R.id.SignIn);
         signIn.setOnClickListener(this);
+
+        mailToPass = (EditText) findViewById(R.id.email);
+        passToPass = (EditText) findViewById(R.id.password);
+        mailToPass.setText(sharedPref.getString("email",""));
+        passToPass.setText(sharedPref.getString("password",""));
 
         flipper= (ViewFlipper) findViewById(R.id.flipper);
         flipper.setOnClickListener(this);
@@ -76,8 +79,8 @@ public class Login extends Activity implements View.OnClickListener {
 
         } else if (v.getId()== R.id.SignIn){
             //getEmailToPass();
-            editor.putString("email", mailToPass);
-            editor.putString("password", passToPass);
+            editor.putString("email", String.valueOf(mailToPass.getText()));
+            editor.putString("password", String.valueOf(passToPass.getText()));
             editor.apply();
           //  new ResetDB().execute();
 
@@ -91,6 +94,7 @@ public class Login extends Activity implements View.OnClickListener {
     public Context getC() {
         return this;
     }
+
 
 
 

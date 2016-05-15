@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -180,10 +181,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public void getEmailToPass() {
-        mailToPass = "";
-        passToPass = "";
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(getC());
+        SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
+        mailToPass=sharedPref.getString("email","");
+        passToPass=sharedPref.getString("password","");
+
+
+        /*AlertDialog.Builder builder = new AlertDialog.Builder(getC());
         builder.setTitle("Anuncios Utilizador");
 
         LinearLayout layout = new LinearLayout(getC());
@@ -212,7 +216,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 dialog.cancel();
             }
         });
-        builder.create().show();
+        builder.create().show();*/
     }
 
     public void synchronizeData(JSONParser jParser, HashMap<String, String> params) {
