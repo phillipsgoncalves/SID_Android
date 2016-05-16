@@ -23,13 +23,19 @@ import com.example.sid.sid_android.url.JSONParser;
 import com.example.sid.sid_android.util.Advertisement;
 import com.example.sid.sid_android.util.UserLogin;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 
 public class Login extends Activity implements View.OnClickListener {
     private EditText ip, port,passToPass,mailToPass;
     private Button login, signIn;
     private ViewFlipper flipper;
+    private ProgressDialog pDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,15 +84,15 @@ public class Login extends Activity implements View.OnClickListener {
             flipper.showNext();
 
         } else if (v.getId()== R.id.SignIn){
-            //getEmailToPass();
             editor.putString("email", String.valueOf(mailToPass.getText()));
             editor.putString("password", String.valueOf(passToPass.getText()));
             editor.apply();
-          //  new ResetDB().execute();
 
-            Intent i = new Intent(this, MainActivity.class);
-            startActivity(i);
-            finish();
+            if(mailToPass.getText() != null && passToPass.getText() != null) {
+                new LoginValidation(this).execute();
+            } else {
+                Toast.makeText(Login.this, "You can't leave these fields empty", Toast.LENGTH_SHORT).show();
+            }
         }
 
     }
@@ -96,7 +102,60 @@ public class Login extends Activity implements View.OnClickListener {
     }
 
 
+    private class LoginValidation extends AsyncTask<String, String, String> {
 
+        private Activity activity;
+        private boolean loginSuccess;
 
+        public LoginValidation(Activity activity) {
+            this.activity = activity;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            pDialog = new ProgressDialog(activity);
+            pDialog.setMessage("Loggin in...");
+            pDialog.setIndeterminate(false);
+            pDialog.setCancelable(true);
+            pDialog.show();
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+            HashMap<String,String> jsonParams = new HashMap<String, String>();
+            jsonParams.put("user", String.valueOf(mailToPass));
+            jsonParams.put("password", String.valueOf(passToPass));
+            jsonParams.put("format", "json");
+
+            JSONParser jsonParser = new JSONParser();
+            JSONArray json = jsonParser.getJSONFromUrl("http://" + ip + ":" + port + "/checkLogin.php", jsonParams);
+            try {
+                List<String> list = new LinkedList<String>();
+                for (int i = 0; i < json.length(); i++) {
+                    JSONObject a = null;
+                    a = json.getJSONObject(i);
+                    JSONObject c = a.getJSONObject("post");
+                    // apanhar aqui a resposta
+                }
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            pDialog.dismiss();
+
+            if(loginSuccess) {
+                Intent i = new Intent(activity, MainActivity.class);
+                startActivity(i);
+                finish();
+            }else
+                Toast.makeText(activity, "Wrong login, please try again.", Toast.LENGTH_LONG).show();
+        }
+    }
 }
 

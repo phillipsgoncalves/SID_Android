@@ -110,6 +110,7 @@ public class InteractiveArrayAdapter extends ArrayAdapter<Advertisement> {
                                     finalViewHolder.image.setImageResource(R.drawable.yes);
                                     list.get(position).setEstado("Y");
                                     handler.updateAd(list.get(position).getNumero_anuncio(), list.get(position));
+                                    handler.updateRelacaoTrad(list.get(position), 1);
                                 }
 
                             });

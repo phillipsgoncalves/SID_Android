@@ -114,8 +114,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     public void addToList(JSONParser jParser, HashMap<String, String> params, String emails, String passs) {
         try {
-
-            params.put("user", "2");
+            SharedPreferences sharedPreferences = getPreferences(Context.MODE_PRIVATE);
+            params.put("user", sharedPreferences.getString("email", ""));
+            params.put("password", sharedPreferences.getString("password", ""));
 //            params.put("pass", passs);
             params.put("format", "json");
             JSONArray json = jParser.getJSONFromUrl(READ_ADS, params);
@@ -354,7 +355,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         protected void onPreExecute() {
             super.onPreExecute();
             pDialog = new ProgressDialog(MainActivity.this);
-            pDialog.setMessage("Getting your ads. Slimani is the best...");
+            pDialog.setMessage("Getting your ads");
             pDialog.setIndeterminate(false);
             pDialog.setCancelable(true);
             pDialog.show();
@@ -378,7 +379,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             if (myads.size() == 0) {
                 Toast.makeText(getC(), "Either no Entries or User/Pass Incorrect", Toast.LENGTH_LONG).show();
             } else {
-                Toast.makeText(getC(), "Reseting Database Complete, Welcome " + mailToPass, Toast.LENGTH_LONG).show();
+                Toast.makeText(getC(), "Refresh Complete" + mailToPass, Toast.LENGTH_LONG).show();
             }
         }
     }

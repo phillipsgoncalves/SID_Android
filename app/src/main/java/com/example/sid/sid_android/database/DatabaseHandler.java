@@ -1,7 +1,9 @@
 package com.example.sid.sid_android.database;
 
+import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
@@ -18,9 +20,11 @@ public class DatabaseHandler {
 
     private DatabaseSetup db_helper;
     private SQLiteDatabase db;
+    private Activity context;
 
-    public DatabaseHandler(Context context) {
+    public DatabaseHandler(Activity context) {
         db_helper = new DatabaseSetup(context);
+        this.context = context;
     }
 
     public void open() {
@@ -212,9 +216,31 @@ public class DatabaseHandler {
                 null);
     }
 
-    public void updateMyAd(int numero_anuncio, Advertisement new_ad) {
-        db.update(DatabaseSetup.MYADS_TABLE, addAdvertisingValues(new_ad), "numero_anuncio = " + numero_anuncio,
-                null);
+    public void updateRelacaoTrad(Advertisement new_ad, int i) {
+        Translator translator = null;
+        if(i == 1) {
+            translator = new Translator(new_ad.getNumero_anuncio(), context.getPreferences(Context.MODE_PRIVATE).getString("email", ""), "Y");
+        }else if (i == 0){
+            translator = new Translator(new_ad.getNumero_anuncio(), context.getPreferences(Context.MODE_PRIVATE).getString("email", ""), "P");
+        }
+
+        Cursor cursor = db.rawQuery("select 1 from myads where myads.numero_anuncio =" + new_ad.getNumero_anuncio(), null);
+        boolean insertOrUpdate = false;
+        try{
+            insertOrUpdate = cursor.moveToFirst();
+        }finally {
+            cursor.close();
+        }
+
+        if(!insertOrUpdate && translator!= null){
+            db.insert(DatabaseSetup.MYADS_TABLE, "numero_anuncio", addTranslatorValues(translator));
+        }else if (translator != null) {
+            db.update(DatabaseSetup.MYADS_TABLE, addTranslatorValues(translator), "numero_anuncio = " + new_ad.getNumero_anuncio(),
+                    null);
+        }
+
+
+
     }
 
     public void clearComps() {
@@ -245,11 +271,12 @@ public class DatabaseHandler {
                 int myAd_Numero_Anuncio_index=c2.getColumnIndex(Schema.MyAds.COLUMN_NUMERO_ANUNCIO);
                 int myRelacao_index=c2.getColumnIndex(Schema.MyAds.COLUMN_RELACAO);
                 int myEmail_index=c2.getColumnIndex(Schema.MyAds.COLUMN_EMAIL);
+
                 int myAdNumber= c2.getInt(myAd_Numero_Anuncio_index);
                 String relacao = c2.getString(myRelacao_index);
                 String email = c2.getString(myEmail_index);
-                    Translator translator = new Translator(myAdNumber, email, relacao);
-                    myTradsRelations.add(translator);
+                Translator translator = new Translator(myAdNumber, email, relacao);
+                myTradsRelations.add(translator);
                 c2.moveToNext();
             }
             c2.close();
