@@ -89,7 +89,7 @@ public class Login extends Activity implements View.OnClickListener {
             editor.apply();
 
             if(mailToPass.getText() != null && passToPass.getText() != null) {
-                new LoginValidation(this).execute();
+                new LoginValidation(this, String.valueOf(ip.getText()), String.valueOf(port.getText()), String.valueOf(mailToPass.getText()), String.valueOf(passToPass.getText())).execute();
             } else {
                 Toast.makeText(Login.this, "You can't leave these fields empty", Toast.LENGTH_SHORT).show();
             }
@@ -106,9 +106,17 @@ public class Login extends Activity implements View.OnClickListener {
 
         private Activity activity;
         private boolean loginSuccess;
+        private String ip;
+        private String port;
+        private String email;
+        private String password;
 
-        public LoginValidation(Activity activity) {
+        public LoginValidation(Activity activity, String ip, String port, String email, String password) {
             this.activity = activity;
+            this.ip = ip;
+            this.port = port;
+            this.email = email;
+            this.password = password;
         }
 
         @Override
@@ -124,8 +132,8 @@ public class Login extends Activity implements View.OnClickListener {
         @Override
         protected String doInBackground(String... params) {
             HashMap<String,String> jsonParams = new HashMap<String, String>();
-            jsonParams.put("user", String.valueOf(mailToPass));
-            jsonParams.put("password", String.valueOf(passToPass));
+            jsonParams.put("user", email);
+            jsonParams.put("password", password);
             jsonParams.put("format", "json");
 
             JSONParser jsonParser = new JSONParser();
@@ -137,6 +145,9 @@ public class Login extends Activity implements View.OnClickListener {
                     a = json.getJSONObject(i);
                     JSONObject c = a.getJSONObject("post");
                     // apanhar aqui a resposta
+
+
+                    loginSuccess = true;
                 }
 
             } catch (JSONException e) {
