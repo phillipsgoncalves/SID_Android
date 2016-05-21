@@ -216,12 +216,12 @@ public class DatabaseHandler {
                 null);
     }
 
-    public void updateRelacaoTrad(Advertisement new_ad, int i) {
+    public void updateRelacaoTrad(Advertisement new_ad, int i, String email, String password) {
         Translator translator = null;
         if(i == 1) {
-            translator = new Translator(new_ad.getNumero_anuncio(), context.getPreferences(Context.MODE_PRIVATE).getString("email", ""), "Y");
+            translator = new Translator(new_ad.getNumero_anuncio(), email, "Y");
         }else if (i == 0){
-            translator = new Translator(new_ad.getNumero_anuncio(), context.getPreferences(Context.MODE_PRIVATE).getString("email", ""), "P");
+            translator = new Translator(new_ad.getNumero_anuncio(), email, "P");
         }
 
         Cursor cursor = db.rawQuery("select 1 from myads where myads.numero_anuncio =" + new_ad.getNumero_anuncio(), null);

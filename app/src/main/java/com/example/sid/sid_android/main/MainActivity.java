@@ -75,7 +75,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         if (handler.getAllAds().size() > 0) {
             List<Advertisement> ads = handler.getAllAds();
-            ArrayAdapter<Advertisement> adapter = new InteractiveArrayAdapter((Activity) getC(), ads, handler);
+            ArrayAdapter<Advertisement> adapter = new InteractiveArrayAdapter((Activity) getC(), ads, handler, mailToPass, passToPass);
             listView.setAdapter(adapter);
         }
 
@@ -332,7 +332,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         @Override
         protected void onPostExecute(String file_url) {
             List<Advertisement> ads = handler.getAllAds();
-            ArrayAdapter<Advertisement> adapter = new InteractiveArrayAdapter((Activity) getC(), ads, handler);
+            ArrayAdapter<Advertisement> adapter = new InteractiveArrayAdapter((Activity) getC(), ads, handler, mailToPass, passToPass);
             listView.setAdapter(adapter);
             pDialog.dismiss();
             if (ads.size() == 0) {
@@ -379,7 +379,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         @Override
         protected void onPostExecute(String result) {
             List<Advertisement> myads=handler.getMyAds(mailToPass);
-            final ArrayAdapter<Advertisement> adapter = new InteractiveArrayAdapter((Activity) getC(), myads, handler);
+            final ArrayAdapter<Advertisement> adapter = new InteractiveArrayAdapter((Activity) getC(), myads, handler, mailToPass, passToPass);
             listView.setAdapter(adapter);
             pDialog.dismiss();
             if (myads.size() == 0) {

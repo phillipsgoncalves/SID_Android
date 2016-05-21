@@ -24,12 +24,16 @@ public class InteractiveArrayAdapter extends ArrayAdapter<Advertisement> {
     private final List<Advertisement> list;
     private final Activity context;
     private final DatabaseHandler handler;
+    private String email;
+    private String password;
 
-    public InteractiveArrayAdapter(Activity context, List<Advertisement> list, DatabaseHandler handler) {
+    public InteractiveArrayAdapter(Activity context, List<Advertisement> list, DatabaseHandler handler, String email, String password) {
         super(context, R.layout.rowbuttonlayout, list);
         this.context = context;
         this.list = list;
         this.handler = handler;
+        this.email = email;
+        this.password = password;
     }
 
     static class ViewHolder {
@@ -110,7 +114,7 @@ public class InteractiveArrayAdapter extends ArrayAdapter<Advertisement> {
                                     finalViewHolder.image.setImageResource(R.drawable.yes);
                                     list.get(position).setEstado("Y");
                                     handler.updateAd(list.get(position).getNumero_anuncio(), list.get(position));
-                                    handler.updateRelacaoTrad(list.get(position), 1);
+                                    handler.updateRelacaoTrad(list.get(position), 1, email, password);
                                 }
 
                             });
@@ -120,6 +124,7 @@ public class InteractiveArrayAdapter extends ArrayAdapter<Advertisement> {
                             finalViewHolder.image.setImageResource(R.drawable.no);
                             list.get(position).setEstado("N");
                             handler.updateAd(list.get(position).getNumero_anuncio(), list.get(position));
+                            handler.updateRelacaoTrad(list.get(position), 0, email,password);
                         }
 
                     });
@@ -129,6 +134,7 @@ public class InteractiveArrayAdapter extends ArrayAdapter<Advertisement> {
                             finalViewHolder.image.setImageResource(R.drawable.unknown);
                             list.get(position).setEstado("I");
                             handler.updateAd(list.get(position).getNumero_anuncio(), list.get(position));
+                            handler.updateRelacaoTrad(list.get(position), 0,email,password);
                         }
 
                     });
