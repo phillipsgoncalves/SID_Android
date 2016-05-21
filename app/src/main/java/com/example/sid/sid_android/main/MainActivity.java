@@ -53,6 +53,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstance) {
         super.onCreate(savedInstance);
         setContentView(R.layout.main);
+
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            mailToPass = extras.getString("USER");
+            passToPass = extras.getString("PASSWORD");
+        }
+
         handler = new DatabaseHandler(this);
         handler.open();
         listView = (ListView) findViewById(R.id.adList);
@@ -114,9 +121,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     public void addToList(JSONParser jParser, HashMap<String, String> params, String emails, String passs) {
         try {
-            SharedPreferences sharedPreferences = getPreferences(Context.MODE_PRIVATE);
-            params.put("user", sharedPreferences.getString("email", ""));
-            params.put("password", sharedPreferences.getString("password", ""));
+            params.put("user", emails);
+            params.put("password", passs);
 //            params.put("pass", passs);
             params.put("format", "json");
             JSONArray json = jParser.getJSONFromUrl(READ_ADS, params);
@@ -178,9 +184,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     public void getEmailToPass() {
 
-        SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
-        mailToPass=sharedPref.getString("email","");
-        passToPass=sharedPref.getString("password","");
+//        SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
+//        mailToPass=sharedPref.getString("email","");
+//        passToPass=sharedPref.getString("password","");
 
         if(mailToPass != null && passToPass != null){
             new ResetDB().execute();
@@ -235,7 +241,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             e.printStackTrace();
         }
         params.put("json", anuncs.toString());
-        jParser.getJSONFromUrl(SYNCHRONIZE, params);
+        JSONArray json = jParser.getJSONFromUrl(SYNCHRONIZE, params);
     }
 
     @Override
@@ -372,14 +378,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         @Override
         protected void onPostExecute(String result) {
-            List<Advertisement> myads=handler.getMyAds();
+            List<Advertisement> myads=handler.getMyAds(mailToPass);
             final ArrayAdapter<Advertisement> adapter = new InteractiveArrayAdapter((Activity) getC(), myads, handler);
             listView.setAdapter(adapter);
             pDialog.dismiss();
             if (myads.size() == 0) {
                 Toast.makeText(getC(), "Either no Entries or User/Pass Incorrect", Toast.LENGTH_LONG).show();
             } else {
-                Toast.makeText(getC(), "Refresh Complete" + mailToPass, Toast.LENGTH_LONG).show();
+                Toast.makeText(getC(), "Refresh Complete " + mailToPass, Toast.LENGTH_LONG).show();
             }
         }
     }

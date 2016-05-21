@@ -125,12 +125,12 @@ public class DatabaseHandler {
         return all;
     }
 
-    public List<Advertisement> getMyAds(){
+    public List<Advertisement> getMyAds(String mailToPass){
         List<Advertisement> myAds = new ArrayList<Advertisement>();
 
         //String whereClauseAnuncios="estado='Y'";
        // String []whereClauseAnunciosArgs={"'y'"};
-        String whereClauseMyAds="email='joao@iscte.pt' AND relacao='Y'";
+        String whereClauseMyAds="email='" + mailToPass + "' AND relacao='Y'";
         //String []whereClauseMyAdsArgs={"'translator@iscte.pt'"};
         Cursor c = db.query(DatabaseSetup.TRANSLATOR_TABLE, null, null,null, null, null, null);
         c.moveToFirst();

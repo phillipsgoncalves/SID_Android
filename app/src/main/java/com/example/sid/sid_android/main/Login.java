@@ -138,16 +138,17 @@ public class Login extends Activity implements View.OnClickListener {
 
             JSONParser jsonParser = new JSONParser();
             JSONArray json = jsonParser.getJSONFromUrl("http://" + ip + ":" + port + "/checkLogin.php", jsonParams);
+
             try {
                 List<String> list = new LinkedList<String>();
                 for (int i = 0; i < json.length(); i++) {
                     JSONObject a = null;
                     a = json.getJSONObject(i);
-                    JSONObject c = a.getJSONObject("post");
-                    // apanhar aqui a resposta
+                    String response = a.getString("post");
 
-
-                    loginSuccess = true;
+                    if(response.equals("yes")) {
+                        loginSuccess = true;
+                    }
                 }
 
             } catch (JSONException e) {
@@ -162,6 +163,8 @@ public class Login extends Activity implements View.OnClickListener {
 
             if(loginSuccess) {
                 Intent i = new Intent(activity, MainActivity.class);
+                i.putExtra("USER", email);
+                i.putExtra("PASSWORD", password);
                 startActivity(i);
                 finish();
             }else
