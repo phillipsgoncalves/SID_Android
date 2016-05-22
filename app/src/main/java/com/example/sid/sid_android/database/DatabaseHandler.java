@@ -183,7 +183,7 @@ public class DatabaseHandler {
                 if(myAdNumber==adNumber){
                     Advertisement myAd=new Advertisement(myAdNumber, c.getString(lingua_origem_index), c.getString(lingua_destino_index),
                             c.getInt(numero_palavras_index), c.getDouble(valor_index), c.getString(data_inicio_index), c.getInt(numero_dias_index), c.getString(software_index),
-                            c.getString(estado_index), c.getString(email_index));
+                            c2.getString(c2.getColumnIndex(Schema.MyAds.COLUMN_RELACAO)), c.getString(email_index));
 
                     Log.d(this.getClass().getName(), ""+myAdNumber+""+adNumber);
 
