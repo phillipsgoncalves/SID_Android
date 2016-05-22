@@ -3,7 +3,6 @@ package com.example.sid.sid_android.main;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -228,7 +227,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         JSONObject anuncs = new JSONObject();
         try {
             JSONArray arr = new JSONArray();
-            List<Translator> ads = handler.getAllTranslatorRelations();
+            List<Translator> ads = handler.getAllTranslatorRelations(mailToPass);
             for(int i = 0; i < ads.size(); i++) {
                 JSONObject obj = new JSONObject();
                 obj.put("numeroAnuncio", ads.get(i).getNumero_anuncio());
@@ -241,7 +240,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             e.printStackTrace();
         }
         params.put("json", anuncs.toString());
-        JSONArray json = jParser.getJSONFromUrl(SYNCHRONIZE, params);
+        jParser.getJSONFromUrl(SYNCHRONIZE, params);
     }
 
     @Override

@@ -99,7 +99,8 @@ public class DatabaseHandler {
 
     public List<Advertisement> getAllAds() {
         List<Advertisement> all = new ArrayList<Advertisement>();
-        Cursor cursor = db.query(DatabaseSetup.TRANSLATOR_TABLE, null, null, null, null, null, null);
+        String whereClauseAds="estado='Y'";
+        Cursor cursor = db.query(DatabaseSetup.TRANSLATOR_TABLE, null, whereClauseAds, null, null, null, null);
         cursor.moveToFirst();
 
         int numero_anuncio_index = cursor.getColumnIndex(Schema.Translator.COLUMN_NUMERO_ANUNCIO);
@@ -114,10 +115,29 @@ public class DatabaseHandler {
         int email_index = cursor.getColumnIndex(Schema.Translator.COLUMN_EMAIL);
 
         while (!cursor.isAfterLast()) {
+
+            Cursor c2=db.query(DatabaseSetup.MYADS_TABLE, null, null, null, null, null, null );
+            c2.moveToFirst();
+
+            String estado = "P";
+
+            while(!c2.isAfterLast()){
+                //ver se na tabela myads (dos tradutores) existe uma entrada com aquele numero de anuncio
+                int myAd_Numero_Anuncio_index=c2.getColumnIndex(Schema.MyAds.COLUMN_NUMERO_ANUNCIO);
+                int myAdNumber= c2.getInt(myAd_Numero_Anuncio_index);
+
+                if(cursor.getInt(numero_anuncio_index) == myAdNumber){
+                    estado = c2.getString(c2.getColumnIndex(Schema.MyAds.COLUMN_RELACAO));
+                }
+                c2.moveToNext();
+
+            }
+            c2.close();
+
             // numero_anuncio, lingua_origem, lingua_destino, numero_palavras,valor, data_inicio_trabalho, numero_dias, designacao_software, estado, email
             Advertisement ad = new Advertisement(cursor.getInt(numero_anuncio_index), cursor.getString(lingua_origem_index), cursor.getString(lingua_destino_index),
                     cursor.getInt(numero_palavras_index), cursor.getDouble(valor_index), cursor.getString(data_inicio_index), cursor.getInt(numero_dias_index), cursor.getString(software_index),
-                    cursor.getString(estado_index), cursor.getString(email_index));
+                    estado, cursor.getString(email_index));
             all.add(ad);
             cursor.moveToNext();
         }
@@ -134,7 +154,6 @@ public class DatabaseHandler {
         //String []whereClauseMyAdsArgs={"'translator@iscte.pt'"};
         Cursor c = db.query(DatabaseSetup.TRANSLATOR_TABLE, null, null,null, null, null, null);
         c.moveToFirst();
-        System.out.println("Teste de sysout-Samaris- "+ c.moveToFirst());
 
         int numero_anuncio_index = c.getColumnIndex(Schema.Translator.COLUMN_NUMERO_ANUNCIO);
         int lingua_origem_index = c.getColumnIndex(Schema.Translator.COLUMN_LINGUA_ORIGEM);
@@ -178,7 +197,6 @@ public class DatabaseHandler {
 
         }
         c.close();
-        System.out.println("O valor Jonas Pistolenz is "+myAds.size());
         return myAds;
     }
 
@@ -239,8 +257,6 @@ public class DatabaseHandler {
                     null);
         }
 
-
-
     }
 
     public void clearComps() {
@@ -257,12 +273,10 @@ public class DatabaseHandler {
         db.delete(DatabaseSetup.MYADS_TABLE, null, null);
     }
 
-    public List<Translator> getAllTranslatorRelations() {
+    public List<Translator> getAllTranslatorRelations(String mailToPass) {
         List<Translator> myTradsRelations = new ArrayList<Translator>();
 
-        //String whereClauseAnuncios="estado='Y'";
-        // String []whereClauseAnunciosArgs={"'y'"};
-        //String []whereClauseMyAdsArgs={"'translator@iscte.pt'"};
+//        String whereClauseTransl="email=" + mailToPass;
 
         Cursor c2=db.query(DatabaseSetup.MYADS_TABLE, null, null, null, null, null, null );
         c2.moveToFirst();

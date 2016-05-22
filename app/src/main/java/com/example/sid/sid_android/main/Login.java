@@ -153,6 +153,8 @@ public class Login extends Activity implements View.OnClickListener {
 
             } catch (JSONException e) {
                 e.printStackTrace();
+            } catch (NullPointerException e){
+                loginSuccess = false;
             }
             return null;
         }
@@ -168,7 +170,7 @@ public class Login extends Activity implements View.OnClickListener {
                 startActivity(i);
                 finish();
             }else
-                Toast.makeText(activity, "Wrong login, please try again.", Toast.LENGTH_LONG).show();
+                Toast.makeText(activity, "Wrong login/no connection, please try again.", Toast.LENGTH_LONG).show();
         }
     }
 }

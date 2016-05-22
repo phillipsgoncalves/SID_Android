@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.database.CursorIndexOutOfBoundsException;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +12,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.sid.sid_android.R;
 import com.example.sid.sid_android.database.DatabaseHandler;
@@ -83,19 +85,32 @@ public class InteractiveArrayAdapter extends ArrayAdapter<Advertisement> {
                     System.out.println(list.get(position).toString());
 
 
+                    try {
+                        Company c = handler.getCompany(list.get(position).getEmail());
+                        alertDialogBuilder.setMessage(c.toString());
+                        alertDialogBuilder.setCancelable(false).setPositiveButton("OK",
+                                new DialogInterface.OnClickListener() {
 
-                    Company c = handler.getCompany(list.get(position).getEmail());
-                    alertDialogBuilder.setMessage(c.toString());
-                    alertDialogBuilder.setCancelable(false).setPositiveButton("OK",
-                            new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        dialog.cancel();
+                                    }
 
-                                public void onClick(DialogInterface dialog, int id) {
-                                    dialog.cancel();
-                                }
+                                });
+                        AlertDialog alertDialog = alertDialogBuilder.create();
+                        alertDialog.show();
+                    }catch (CursorIndexOutOfBoundsException e){
+                        alertDialogBuilder.setMessage("The email associated to this Company is invalid (not an user)!");
+                        alertDialogBuilder.setCancelable(false).setPositiveButton("OK",
+                                new DialogInterface.OnClickListener() {
 
-                            });
-                    AlertDialog alertDialog = alertDialogBuilder.create();
-                    alertDialog.show();
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        dialog.cancel();
+                                    }
+
+                                });
+                        AlertDialog alertDialog = alertDialogBuilder.create();
+                        alertDialog.show();
+                    }
                 }
             });
 
@@ -132,7 +147,7 @@ public class InteractiveArrayAdapter extends ArrayAdapter<Advertisement> {
 
                         public void onClick(DialogInterface dialog, int id) {
                             finalViewHolder.image.setImageResource(R.drawable.unknown);
-                            list.get(position).setEstado("I");
+                            list.get(position).setEstado("P");
                             handler.updateAd(list.get(position).getNumero_anuncio(), list.get(position));
                             handler.updateRelacaoTrad(list.get(position), 0,email,password);
                         }
@@ -159,7 +174,7 @@ public class InteractiveArrayAdapter extends ArrayAdapter<Advertisement> {
             viewHolder.image.setImageResource(R.drawable.yes);
         } else if (list.get(position).getEstado().equals("N")) {
             viewHolder.image.setImageResource(R.drawable.no);
-        } else {
+        } else if (list.get(position).getEstado().equals("P")){
             viewHolder.image.setImageResource(R.drawable.unknown);
         }
 
